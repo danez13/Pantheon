@@ -4,10 +4,10 @@ import requests.exceptions
 import urllib.parse
 from collections import deque
 import argparse
-import json
 import os
 import time
 from MODULES.SiteMap import populateSiteMap
+
 scraped_urls = set()
 headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0' } 
 if __name__ == "__main__":
@@ -19,14 +19,14 @@ if __name__ == "__main__":
                     epilog='HI ;)')
     parser.add_argument("url", help="input-url")
     parser.add_argument("-l","--limit",help="url-limit",default=-1,type=int,dest="limit")
-    parser.add_argument("-Si", "--SQLi",help="implement SQL injection on any queries found", action="store_true",dest="sqlBool")
+    # parser.add_argument("-Si", "--SQLi",help="implement SQL injection on any queries found", action="store_true",dest="sqlBool")
     parser.add_argument("-aS", "--advSearch", help="advance search", action="store_true", dest="searchBool")
 
     # add arguements to local variables
     args = parser.parse_args()
     user_url=args.url
     limit = args.limit
-    SQLBool= args.sqlBool
+    # SQLBool= args.sqlBool
     searchBool = args.searchBool
 
     # initialize necessary variables

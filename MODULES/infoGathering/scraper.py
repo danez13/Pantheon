@@ -5,20 +5,19 @@ import urllib.parse
 from collections import deque
 import json
 import os
-import logging
 import re
+import logging
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0' } 
-
-# create Logger
-logging.basicConfig(filename="LoggingData/pantheon.log",
+logging.basicConfig(filename="LoggingData/pantheon-scraper.log",
                     format="%(asctime)s - %(levelname)s: %(message)s",
-                    filemode="a")
+                    filemode="w")
 
 # create loggin object
 logger = logging.getLogger()
 # setting the logger threshhold to DEBUG
 logger.setLevel(logging.DEBUG)
+
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0' } 
 
 def __populateSiteMap(siteMap:dict,parts:urllib.parse.SplitResult,FileBool:bool):
     base_url = '{0.scheme}://{0.netloc}'.format(parts)
@@ -50,7 +49,7 @@ def __populateSiteMap(siteMap:dict,parts:urllib.parse.SplitResult,FileBool:bool)
     return siteMap
 
 def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advanceSearch:bool, emailBool:bool):
-    logging.info("scrape logging has started")
+    logger.info("scrape logging has started")
     urls = deque([input_url])
 
     scraped_urls = set()

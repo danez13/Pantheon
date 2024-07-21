@@ -1,17 +1,16 @@
 import argparse
 import validators
 import urllib.parse
-import socket
 import logging
 from MODULES.infoGathering import scraper
 
-logging.basicConfig(filename="LoggingData/pantheon.log",
+logging.basicConfig(filename="LoggingData/pantheon-main.log",
                     format="%(asctime)s - %(levelname)s: %(message)s",
                     filemode="w")
 
-
 # create loggin object
 logger = logging.getLogger()
+
 # setting the logger threshhold to DEBUG
 logger.setLevel(logging.CRITICAL)
 

@@ -8,7 +8,7 @@ import os
 import re
 import logging
 
-logging.basicConfig(filename="LoggingData/pantheon-scraper.log",
+logging.basicConfig(filename="LoggingData/pantheon-main.log",
                     format="%(asctime)s - %(levelname)s: %(message)s",
                     filemode="w")
 

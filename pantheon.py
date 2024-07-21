@@ -4,19 +4,17 @@ import urllib.parse
 import logging
 from MODULES.infoGathering import scraper
 
-logging.basicConfig(filename="LoggingData/pantheon-main.log",
+logging.basicConfig(filename="LoggingData/pantheon_main.log",
                     format="%(asctime)s - %(levelname)s: %(message)s",
                     filemode="w")
 
-# create loggin object
 logger = logging.getLogger()
 
-# setting the logger threshhold to DEBUG
-logger.setLevel(logging.CRITICAL)
-
-logger.info("Main logging has been Started")
+logger.setLevel(logging.NOTSET)
 
 if __name__ == "__main__":
+
+    logger.info("logging main module has started")
     
     # processing command line arguements
     parser = argparse.ArgumentParser()
@@ -37,11 +35,13 @@ if __name__ == "__main__":
     emailBool = args.emailBool
 
     # check if IP address
+    logger.debug(f"IP validation [{user_input}]")
     ipBool = False
-    logger.debug(f"IP validation of [{user_input}]")
     if validators.ip_address.ipv4(user_input):
         ipBool = True
         ip = user_input
+    else:
+        logger.warning(f"[{user_input}] is not a IP")
 
     url = user_input
     parts = urllib.parse.urlsplit(url)
@@ -51,13 +51,15 @@ if __name__ == "__main__":
         url = "https://" + url
 
     # check if valid domain
+    logger.debug(f"IP validating [{user_input}]")
     domainBool = False
-    logger.debug(f"domain validation of [{user_input}]")
     if validators.domain(parts.hostname):
         domainBool = True
+    else:
+        logger.warning(f"[{user_input}] is not a domain")
 
     if not domainBool and not ipBool:
-        logger.error(f"{user_input} is not a domain or an ip")
+        logger.error(f"[{user_input}] is not a domain or IP")
 
     # if a domain do the following:
     if domainBool:
@@ -65,5 +67,4 @@ if __name__ == "__main__":
         # scrape for sub-urls
         scraper.scrape(parts.geturl(),limit,fileStoreBool,siteMapBool,advanceSearch,emailBool)
 
-    
     

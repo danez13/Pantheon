@@ -8,16 +8,15 @@ import os
 import re
 import logging
 
-logging.basicConfig(filename="LoggingData/pantheon-main.log",
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0' } 
+
+logging.basicConfig(filename="LoggingData/pantheon_main.log",
                     format="%(asctime)s - %(levelname)s: %(message)s",
                     filemode="w")
 
-# create loggin object
 logger = logging.getLogger()
-# setting the logger threshhold to DEBUG
-logger.setLevel(logging.DEBUG)
 
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:82.0) Gecko/20100101 Firefox/82.0' } 
+logger.setLevel(logging.NOTSET)
 
 def __populateSiteMap(siteMap:dict,parts:urllib.parse.SplitResult,FileBool:bool):
     base_url = '{0.scheme}://{0.netloc}'.format(parts)
@@ -45,6 +44,7 @@ def __populateSiteMap(siteMap:dict,parts:urllib.parse.SplitResult,FileBool:bool)
             tempMap = tempMap["Children"][subPage]
     if FileBool:
         with open(f"Files/{parts.hostname}/Map.json","w+") as outfile:
+            logger.debug(f"creating [Files/{parts.hostname}/Map.json] for storing site map")
             json.dump(siteMap,outfile)
     return siteMap
 
@@ -58,10 +58,11 @@ def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advanceSearc
     # if urlFileBool or siteMapBool is True: create website directory
     if FileBool or siteMapBool:
         parts = urllib.parse.urlsplit(input_url)
-        logger.debug(f"creating file Folder for [{parts.hostname}]")
+        # logger.debug(f"creating file Folder for [{parts.hostname}]")
         try:  
             os.makedirs(f"Files/{parts.hostname}")  
         except OSError as error:  
+            print(error)
             logger.warning(error)
 
     # if emailBool is True: create website directory
@@ -110,8 +111,10 @@ def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advanceSearc
 
             if count < limit or advanceSearch:
                 try:
+                    logger.debug(f"request [{parts.hostname}] HTML page")
                     response = requests.get(url,headers=headers)
-                except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError):
+                except (requests.exceptions.MissingSchema, requests.exceptions.ConnectionError) as error:
+                    logger.error(error)
                     continue
 
                 # if emailBool is True:
@@ -119,6 +122,7 @@ def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advanceSearc
                     new_emails = set(re.findall(r"[a-z0-9\.\-+_]+@[a-z0-9\.\-+_]+\.[a-z]+", response.text, re.I))
                     emails.update(new_emails)
 
+                logger.debug("creating html parser")
                 soup = BeautifulSoup(response.text, features="html.parser")
 
                 for anchor in soup.find_all("a"):

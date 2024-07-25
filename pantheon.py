@@ -128,9 +128,6 @@ if __name__ == "__main__":
             # if formatDomainBool is True: format domain lookup info else print unformatted info
             if formatDomainBool:
                 domainLookup.formatDomainInfo(domain_info,(parts.hostname,fileStoreBool))
-            else:
-                print("Domain INFO:")
-                print(domain_info)
 
         if cmd == "portscan":
             logger.debug(f"beggining host scan on {parts.hostname}")

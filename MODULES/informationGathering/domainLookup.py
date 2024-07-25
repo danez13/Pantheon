@@ -66,6 +66,8 @@ def getDomainInfo(host:str, fileStoreBool:bool) -> dict:
                         newdm_info[key]=value
                 logger.debug(f"writing raw domain info to {outfile}")
                 json.dump(newdm_info,outfile)
+        else:
+            print(dm_info)
         return dm_info
     return {}
 

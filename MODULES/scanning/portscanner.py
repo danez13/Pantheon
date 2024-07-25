@@ -25,7 +25,6 @@ def scanDomain(parts,limit:int,fileStoreBool:bool,openPortBool:bool):
                 # returns an error indicator
                 logger.debug(f"connecting to {parts.hostname}/{target}")
                 result = s.connect_ex((target,port))
-                
                 # if openPortBool is True: print or write only open ports
                 if openPortBool:
                         if result == 0:

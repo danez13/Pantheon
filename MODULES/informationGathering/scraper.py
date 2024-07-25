@@ -62,21 +62,13 @@ def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advSearchBoo
     scraped_urls = set()
     count = 0
 
-    # if urlFileBool or siteMapBool is True: create website directory
-    if FileBool or siteMapBool:
-        parts = urllib.parse.urlsplit(input_url)
-        logger.debug(f"creating file Folder for [{parts.hostname}]")
-        try:  
-            os.makedirs(f"Files/{parts.hostname}")  
-        except OSError as error:  
-            logger.warning(error)
-
     # if emailBool is True: create website directory
     if emailBool:
         emails = set()
 
     # if urlFileBool is True: create file to store urls
     if FileBool:
+        parts = urllib.parse.urlsplit(input_url)
         logger.debug(f"creating [Files/{parts.hostname}/url.txt] for storing urls")
         urlFile = open(f"Files/{parts.hostname}/url.txt","w")
 
@@ -100,17 +92,17 @@ def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advSearchBoo
             # check if current url is a sub-url of the user input url
             if path.find(input_url) == -1:
                 continue
-            
-            # if count is less than true or advanceSearchBool is True: print out processing url else print out url found
-            if count < limit or advSearchBool:
-                print('[%d] Processing %s' % (count, url))
-            else:
-                print("[%d] Found %s" % (count, url))
 
             # if urlFileBool is True: Write urls to file
             if FileBool:
                 logger.debug(f"writing to {urlFile}")
                 urlFile.write(url+"\n")
+            else:
+                # if count is less than true or advanceSearchBool is True: print out processing url else print out url found
+                if count < limit or advSearchBool:
+                    print('[%d] Processing %s' % (count, url))
+                else:
+                    print("[%d] Found %s" % (count, url))
 
             # if siteMapBool is True: populate sitemap
             if siteMapBool:
@@ -149,18 +141,18 @@ def scrape(input_url:str, limit:int, FileBool:bool,siteMapBool:bool,advSearchBoo
 
     # if emailBool True: collect emails and print
     if emailBool:
-
         # if FileBool is True: open file to save gathered emails to
         if FileBool:
             logger.debug(f"opening [Files/{parts.hostname}/email.txt] for writing")
             emailFile = open(f"Files/{parts.hostname}/email.txt","w")
-        
         for mail in emails:
             # if FileBool is True: write gathered emails to file
             if FileBool:
                 logger.debug(f"writing to {emailFile}")
                 emailFile.write(mail)
-            print(mail)
+            else:
+                print(mail)
+    
     # if FileBool is True: close file used to store urls
     if FileBool:
         urlFile.close()
